@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HabFitAPI.Contract\HabFitAPI.Contract.csproj" />
-    <ProjectReference Include="..\HabFitAPI.Data\HabFitAPI.Data.csproj" />
     <ProjectReference Include="..\HabFitAPI.Entities\HabFitAPI.Entities.csproj" />
   </ItemGroup>
 

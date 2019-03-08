@@ -35,6 +35,12 @@ namespace HabFitAPI.Data
             return await _users.Find<Users>(user => user.ID == id).FirstOrDefaultAsync();
         }
 
+        public async Task<Users> Register(Users user)
+        {
+            await _users.InsertOneAsync(user);
+            return user;
+        }
+
         public Users Create(Users users)
         {
             _users.InsertOne(users);
@@ -54,6 +60,39 @@ namespace HabFitAPI.Data
         public void Remove(string id)
         {
             _users.DeleteOne(user => user.ID == id);
+        }
+
+        public async Task<Users> Login(string username)
+        {
+            return await _users.Find<Users>(user => user.UserName == username).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> UserExists(string username)
+        {
+            try
+            {
+                var cursor = await _users.FindAsync(x => x.UserName == username);
+                IEnumerable<Users> lst = new List<Users>();
+
+                while (await cursor.MoveNextAsync())
+                {
+                    lst = cursor.Current;
+
+                    foreach (var item in lst)
+                    {
+                        if (!string.IsNullOrEmpty(item.ID))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

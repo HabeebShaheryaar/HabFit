@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HabFitAPI.Business;
+using HabFitAPI.Contract;
 using HabFitAPI.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +15,23 @@ namespace HabFitAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly HabFitBusiness _habFitBusiness;
+        private readonly IHabFitContract _habFitContract;
 
-        public AccountController(HabFitBusiness habFitBusiness)
+        //public AccountController(HabFitBusiness habFitBusiness)
+        //{
+        //    _habFitBusiness = habFitBusiness;
+        //}
+
+        public AccountController(IHabFitContract habFitContract)
         {
-            _habFitBusiness = habFitBusiness;
+            _habFitContract = habFitContract;
         }
 
         [HttpGet]
         public async Task<ActionResult<string>> Get()
         {
             List<Users> lstUsers = new List<Users>();
-            lstUsers = await _habFitBusiness.GetUsers();
+            lstUsers = await _habFitContract.GetUsers();
             string res = JsonConvert.SerializeObject(lstUsers);
             return res;
         }
@@ -42,19 +48,20 @@ namespace HabFitAPI.Controllers
         //}
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<string>> Get(string id)
-        {
-            Users users = new Users();
-            users = await _habFitBusiness.Get(id);
-            return users.UserName;
-        }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<string>> Get(string id)
+        //{
+        //    Users users = new Users();
+        //    users = await _habFitContract.Get(id);
+        //    return users.UserName;
+        //}
 
         // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //[HttpPost]
+        //public void Register([FromBody] Users users, [FromBody] string password)
+        //{
+        //    _habFitContract.Register(users, password);
+        //}
 
         // PUT api/values/5
         [HttpPut("{id}")]
