@@ -11,14 +11,14 @@ export class UsersComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.getUsers();
+    // this.getUsers();
   }
 
-  getUsers() {
-    this.http.get('https://localhost:44311/api/Account').subscribe(response => {
-      this.users = response;
-    }, error => {
-      console.log(error);
-    });
-  }
+  // getUsers() {
+  //   this.http.get('https://localhost:44311/api/Account').subscribe(response => {
+  //     this.users = response;
+  //   }, error => {
+  //     console.log(error);
+  //   });
+  // }
 }
