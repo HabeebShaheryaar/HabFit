@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HabFit.Common\HabFit.Common.csproj" />
     <ProjectReference Include="..\HabFitAPI.Business\HabFitAPI.Business.csproj" />
     <ProjectReference Include="..\HabFitAPI.Data\HabFitAPI.Data.csproj" />
   </ItemGroup>

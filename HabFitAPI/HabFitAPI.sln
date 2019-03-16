@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HabFitAPI.Entities", "HabFi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HabFitAPI.Business", "HabFitAPI.Business\HabFitAPI.Business.csproj", "{9D3449CE-ECEE-43FD-949D-AC2EF07A319C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabFitAPI.Contract", "HabFitAPI.Contract\HabFitAPI.Contract.csproj", "{FBCF9122-2755-4EB8-A3CB-E4C0F0EB5F45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HabFitAPI.Contract", "HabFitAPI.Contract\HabFitAPI.Contract.csproj", "{FBCF9122-2755-4EB8-A3CB-E4C0F0EB5F45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabFit.Common", "HabFit.Common\HabFit.Common.csproj", "{7529E7F0-6062-4761-98E1-A50C1747AAC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{FBCF9122-2755-4EB8-A3CB-E4C0F0EB5F45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBCF9122-2755-4EB8-A3CB-E4C0F0EB5F45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBCF9122-2755-4EB8-A3CB-E4C0F0EB5F45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7529E7F0-6062-4761-98E1-A50C1747AAC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7529E7F0-6062-4761-98E1-A50C1747AAC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7529E7F0-6062-4761-98E1-A50C1747AAC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7529E7F0-6062-4761-98E1-A50C1747AAC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
