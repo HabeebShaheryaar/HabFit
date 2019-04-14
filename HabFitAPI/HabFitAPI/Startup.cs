@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using HabFit.Common.Helpers;
+using AutoMapper;
 
 namespace HabFitAPI
 {
@@ -38,12 +39,19 @@ namespace HabFitAPI
             //services.AddDbContext<DataContext>(x => x.sql)
             services.AddScoped<HabFitBusiness>();
             services.AddScoped<HabFitData>();
+            services.AddScoped<UserData>();
             services.AddTransient<IHabFitContract, HabFitBusiness>();
+            services.AddTransient<IUserRepository, UserRepository>();
             //services.AddScoped<IHabFitContract, HabFitBusiness>();
             //services.AddScoped<IHabFitContract>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
+
             services.AddCors();
+            services.AddAutoMapper();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

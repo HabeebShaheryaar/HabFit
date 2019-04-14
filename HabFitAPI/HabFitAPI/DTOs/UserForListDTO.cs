@@ -1,26 +1,16 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace HabFitAPI.Entities
+namespace HabFitAPI.DTOs
 {
-    public class Users
+    public class UserForListDTO
     {
-        //public Users()
-        //{
-        //    Photos = new List<Photo>();
-        //}
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string ID { get; set; }
-
-        [BsonElement("UserName")]
         public string UserName { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
         public string Gender { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public int Age { get; set; }
         public string KnownAs { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastActive { get; set; }
@@ -29,6 +19,6 @@ namespace HabFitAPI.Entities
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public List<Photo> Photos { get; set; }
+        public string PhotoUrl { get; set; }
     }
 }
