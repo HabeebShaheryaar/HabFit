@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 export class MessagesComponent implements OnInit {
 
   constructor() {
-    console.log('In cons');
    }
 
   ngOnInit() {
