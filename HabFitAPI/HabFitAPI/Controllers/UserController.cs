@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HabFitAPI.Controllers
@@ -41,6 +42,21 @@ namespace HabFitAPI.Controllers
             var user = await _repo.GetUser(id);
             var userToReturn = _mapper.Map<UserForDetailedDTO>(user);
             return Ok(userToReturn);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, UserForUpdateDTO userForUpdateDTO)
+        {
+            if (id != User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                return Unauthorized();
+            var userFromRepo = await _repo.GetUser(id);
+
+            _mapper.Map(userForUpdateDTO, userFromRepo);
+
+            if (await _repo.SaveAll(id, userFromRepo))
+                return NoContent();
+
+            throw new Exception($"Updating user {id} failed on save");
         }
     }
 }

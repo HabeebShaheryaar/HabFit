@@ -12,7 +12,7 @@ namespace HabFitAPI.Contract
         void DeleteUser(string userID);
         void AddPhoto(Photo photo);
         void DeletePhoto(string photoID);
-        Task<bool> SaveAll();
+        Task<bool> SaveAll(string id, Users user);
         Task<IEnumerable<Users>> GetUsers();
         Task<Users> GetUser(string userID);
     }

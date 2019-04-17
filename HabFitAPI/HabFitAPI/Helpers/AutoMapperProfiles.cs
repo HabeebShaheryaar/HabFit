@@ -32,6 +32,7 @@ namespace HabFitAPI.Helpers
                 {
                     opt.MapFrom((d, dest) => d.DateOfBirth.CalculateAge());
                 });
+            CreateMap<UserForUpdateDTO, Users>();
         }
     }
 }

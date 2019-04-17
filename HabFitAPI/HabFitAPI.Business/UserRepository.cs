@@ -47,9 +47,9 @@ namespace HabFitAPI.Business
             return _userData.GetUsers();
         }
 
-        public Task<bool> SaveAll()
+        public Task<bool> SaveAll(string id, Users user)
         {
-            throw new NotImplementedException();
+            return _userData.SaveAll(id, user);
         }
     }
 }

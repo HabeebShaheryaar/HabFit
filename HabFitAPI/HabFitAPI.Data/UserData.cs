@@ -1,6 +1,8 @@
 ﻿using HabFitAPI.Entities;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -77,9 +79,29 @@ namespace HabFitAPI.Data
             return lstUsers;
         }
 
-        public Task<bool> SaveAll()
+        //public async Task<ReplaceOneResult> SaveUserAsync(Users entity) where T : class
+        //{
+        //    var result = await _users.ReplaceOneAsync(i => i.ID == entity.ID, entity, new UpdateOptions { IsUpsert = true });
+        //    return result;
+        //    // look at result.MatchedCount to see whether it was an insert or update.
+        //}
+
+        public async Task<bool> SaveAll(string id, Users user)
         {
-            throw new NotImplementedException();
+            bool result = false;
+
+            try
+            {
+                var response = await _users.ReplaceOneAsync(doc => doc.ID == id, user, new UpdateOptions { IsUpsert = true });
+                if (response.MatchedCount == 1 && response.ModifiedCount == 1)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+            return result;
         }
     }
 }
