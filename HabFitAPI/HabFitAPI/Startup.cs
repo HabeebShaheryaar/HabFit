@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using HabFit.Common.Helpers;
 using AutoMapper;
+using HabFitAPI.Helpers;
 
 namespace HabFitAPI
 {
@@ -51,6 +52,7 @@ namespace HabFitAPI
                 });
 
             services.AddCors();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

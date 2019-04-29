@@ -23,4 +23,12 @@ export class UserService {
   updateUser(id: string, user: User) {
     return this.http.put(this.baseUrl + 'user/' + id, user);
   }
+
+  setMainPhoto(userID: string, ID: string) {
+    return this.http.post(this.baseUrl + 'user/' + userID + '/photos/' + ID + '/setMain', {});
+  }
+
+  deletePhoto(userID: string, ID: string) {
+    return this.http.delete(this.baseUrl + 'user/' + userID + '/photos/' + ID);
+  }
 }

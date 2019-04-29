@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HabFitAPI.Data
@@ -15,6 +16,7 @@ namespace HabFitAPI.Data
         //public DbSet<Users> Users { get; set; }
 
         private readonly IMongoCollection<Users> _users;
+        private readonly IMongoCollection<Photo> _photos;
 
         IConfiguration config { get; }
 
@@ -23,6 +25,7 @@ namespace HabFitAPI.Data
             var client = new MongoClient(config.GetConnectionString("HabFitDB"));
             var database = client.GetDatabase("HabFitDB");
             _users = database.GetCollection<Users>("Users");
+            _photos = database.GetCollection<Photo>("Photos");
         }
 
         public async Task<List<Users>> GetUsers()
@@ -64,7 +67,11 @@ namespace HabFitAPI.Data
 
         public async Task<Users> Login(string username)
         {
-            return await _users.Find<Users>(user => user.UserName == username).FirstOrDefaultAsync();
+            var objUser = await _users.Find<Users>(user => user.UserName == username).FirstOrDefaultAsync();
+            var objMainPhoto = _photos.AsQueryable<Photo>().Where(u => u.UserID == objUser.ID).Where(p => p.IsMain).FirstOrDefault();
+            objUser.Photos = new List<Photo>();
+            objUser.Photos.Add(objMainPhoto);
+            return objUser;
         }
 
         public async Task<bool> UserExists(string username)

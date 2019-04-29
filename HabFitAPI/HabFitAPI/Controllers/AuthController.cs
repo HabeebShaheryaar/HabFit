@@ -1,4 +1,5 @@
-﻿using HabFitAPI.Contract;
+﻿using AutoMapper;
+using HabFitAPI.Contract;
 using HabFitAPI.DTOs;
 using HabFitAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +21,13 @@ namespace HabFitAPI.Controllers
     {
         private readonly IHabFitContract _repo;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public AuthController(IHabFitContract repo, IConfiguration config)
+        public AuthController(IHabFitContract repo, IConfiguration config, IMapper mapper)
         {
-            this._repo = repo;
+            _repo = repo;
             _config = config;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -75,9 +78,12 @@ namespace HabFitAPI.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            var user = _mapper.Map<UserForListDTO>(userFromRepo);
+
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             });
         }
     }

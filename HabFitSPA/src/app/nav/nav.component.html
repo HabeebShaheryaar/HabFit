@@ -33,8 +33,12 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     
     <div *ngIf="loggedIn()" class="dropdown" dropdown>
+      <span class="mr-1">
+        <img src="{{photoUrl}}" alt="">
+      </span>
+
       <a class="dropdown-toggle text-light" dropdownToggle>
-        Welcome {{authService.decodedToken.unique_name | titlecase}}
+        Welcome {{authService.decodedToken?.unique_name | titlecase}}
       </a>
     <div class="dropdown-menu mt-3" *dropdownMenu>
       <a class="dropdown-item" [routerLink]="['/user/edit']"><i class="fa fa-user"></i> Edit Profile</a>

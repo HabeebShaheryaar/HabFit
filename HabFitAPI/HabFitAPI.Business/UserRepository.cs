@@ -37,6 +37,16 @@ namespace HabFitAPI.Business
             _userData.DeleteUser(userID);
         }
 
+        public Photo GetMainPhotoForUser(string userID)
+        {
+            return _userData.GetMainPhotoForUser(userID);
+        }
+
+        public Task<Photo> GetPhoto(string userID)
+        {
+            return _userData.GetPhoto(userID);
+        }
+
         public Task<Users> GetUser(string userID)
         {
             return _userData.GetUser(userID);
@@ -50,6 +60,11 @@ namespace HabFitAPI.Business
         public Task<bool> SaveAll(string id, Users user)
         {
             return _userData.SaveAll(id, user);
+        }
+
+        public void SetMainPhoto(Photo photoFromRepo, Photo currentMainPhoto)
+        {
+            _userData.SetMainPhoto(photoFromRepo, currentMainPhoto);
         }
     }
 }

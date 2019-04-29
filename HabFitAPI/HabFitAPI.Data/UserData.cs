@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HabFitAPI.Data
@@ -35,6 +36,35 @@ namespace HabFitAPI.Data
             _photos.InsertOne(photo);
         }
 
+        public Photo GetMainPhotoForUser(string userID)
+        {
+            var result = _photos.AsQueryable<Photo>().Where(u => u.UserID == userID).Where(p => p.IsMain).FirstOrDefault();
+            return result;
+                //Find<Photo>(u => u.UserID == userID).Where( .FirstOrDefaultAsync();
+        }
+
+        public void SetMainPhoto(Photo photoFromRepo, Photo currentMainPhoto)
+        {
+            try
+            {
+                var photoFromRepoResponse = _photos.ReplaceOne(doc => doc.ID == photoFromRepo.ID, photoFromRepo, new UpdateOptions { IsUpsert = true });
+                var currentMainPhotoResponse = _photos.ReplaceOne(doc => doc.ID == currentMainPhoto.ID, currentMainPhoto, new UpdateOptions { IsUpsert = true });
+                if (!(currentMainPhotoResponse.MatchedCount == 1 && currentMainPhotoResponse.ModifiedCount == 1) && !(currentMainPhotoResponse.MatchedCount == 1 && currentMainPhotoResponse.ModifiedCount == 1))
+                    throw new Exception("Problem while setting up the Main Photo");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<Photo> GetPhoto(string photoID)
+        {
+            Photo objPhoto = new Photo();
+            objPhoto = await _photos.Find<Photo>(photo => photo.ID == photoID).FirstOrDefaultAsync();
+            return objPhoto;
+        }
+
         public void DeletePhoto(string photoID)
         {
             _photos.DeleteOne(photo => photo.ID == photoID);
@@ -48,14 +78,13 @@ namespace HabFitAPI.Data
         public async Task<Users> GetUser(string id)
         {
             Users objUser = new Users();
-            Photo objPhoto = new Photo();
+            List<Photo> lstPhotos = new List<Photo>();
             objUser = await _users.Find<Users>(user => user.ID == id).FirstOrDefaultAsync();
 
             if (objUser != null && !string.IsNullOrEmpty(objUser.ID))
             {
-                objPhoto = await _photos.Find<Photo>(photo => photo.UserID == objUser.ID).FirstOrDefaultAsync();
-                objUser.Photos = new List<Photo>();
-                objUser.Photos.Add(objPhoto);
+                lstPhotos = await _photos.Find<Photo>(photo => photo.UserID == objUser.ID).ToListAsync();
+                objUser.Photos = lstPhotos;
             }
 
             return objUser;

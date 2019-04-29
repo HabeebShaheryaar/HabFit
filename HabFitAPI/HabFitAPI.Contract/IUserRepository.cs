@@ -15,5 +15,8 @@ namespace HabFitAPI.Contract
         Task<bool> SaveAll(string id, Users user);
         Task<IEnumerable<Users>> GetUsers();
         Task<Users> GetUser(string userID);
+        Task<Photo> GetPhoto(string userID);
+        Photo GetMainPhotoForUser(string userID);
+        void SetMainPhoto(Photo photoFromRepo, Photo currentMainPhoto);
     }
 }
