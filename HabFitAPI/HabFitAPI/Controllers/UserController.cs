@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HabFitAPI.Contract;
 using HabFitAPI.DTOs;
+using HabFitAPI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace HabFitAPI.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
