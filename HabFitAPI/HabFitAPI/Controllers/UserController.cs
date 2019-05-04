@@ -31,12 +31,12 @@ namespace HabFitAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var users =  await _repo.GetUsers();
+            var users = await _repo.GetUsers();
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDTO>>(users);
             return Ok(usersToReturn);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(string id)
         {
             var user = await _repo.GetUser(id);

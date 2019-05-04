@@ -35,6 +35,7 @@ namespace HabFitAPI.Helpers
             CreateMap<UserForUpdateDTO, Users>();
             CreateMap<Photo, PhotoForReturnDTO>();
             CreateMap<PhotoForCreationDTO, Photo>();
+            CreateMap<UserForRegisterDTO, Users>();
         }
     }
 }

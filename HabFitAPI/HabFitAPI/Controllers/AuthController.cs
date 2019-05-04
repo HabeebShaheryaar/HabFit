@@ -38,14 +38,15 @@ namespace HabFitAPI.Controllers
             if (await _repo.UserExists(userForRegisterDTO.Username))
                 return BadRequest("Username already exists");
 
-            var userToCreate = new Users()
-            {
-                UserName = userForRegisterDTO.Username
-            };
+            var userToCreate = _mapper.Map<Users>(userForRegisterDTO);
 
-            var createdUser = _repo.Register(userToCreate, userForRegisterDTO.Password);
+            Users createdUser = new Users();
 
-            return StatusCode(201);
+            createdUser = _repo.Register(userToCreate, userForRegisterDTO.Password).GetAwaiter().GetResult();
+
+            var userToReturn = _mapper.Map<UserForDetailedDTO>(createdUser);
+
+            return CreatedAtRoute("GetUser", new { controller = "User", id = createdUser.ID }, userToReturn);
         }
 
         [HttpPost("login")]
