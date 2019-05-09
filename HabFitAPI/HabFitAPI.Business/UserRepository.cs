@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HabFitAPI.Contract;
 using HabFitAPI.Data;
 using HabFitAPI.Entities;
+using HabFitAPI.Helpers;
 
 namespace HabFitAPI.Business
 {
@@ -52,9 +53,9 @@ namespace HabFitAPI.Business
             return _userData.GetUser(userID);
         }
 
-        public Task<IEnumerable<Users>> GetUsers()
+        public Task<PagedList<Users>> GetUsers(UserParams userParams)
         {
-            return _userData.GetUsers();
+            return _userData.GetUsers(userParams);
         }
 
         public Task<bool> SaveAll(string id, Users user)

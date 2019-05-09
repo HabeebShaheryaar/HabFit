@@ -1,4 +1,5 @@
 ﻿using HabFitAPI.Entities;
+using HabFitAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +14,7 @@ namespace HabFitAPI.Contract
         void AddPhoto(Photo photo);
         void DeletePhoto(string photoID);
         Task<bool> SaveAll(string id, Users user);
-        Task<IEnumerable<Users>> GetUsers();
+        Task<PagedList<Users>> GetUsers(UserParams userParams);
         Task<Users> GetUser(string userID);
         Task<Photo> GetPhoto(string userID);
         Photo GetMainPhotoForUser(string userID);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using HabFitAPI.Helpers;
 
 namespace HabFitAPI.Data
 {
@@ -40,7 +41,7 @@ namespace HabFitAPI.Data
         {
             var result = _photos.AsQueryable<Photo>().Where(u => u.UserID == userID).Where(p => p.IsMain).FirstOrDefault();
             return result;
-                //Find<Photo>(u => u.UserID == userID).Where( .FirstOrDefaultAsync();
+            //Find<Photo>(u => u.UserID == userID).Where( .FirstOrDefaultAsync();
         }
 
         public void SetMainPhoto(Photo photoFromRepo, Photo currentMainPhoto)
@@ -90,10 +91,35 @@ namespace HabFitAPI.Data
             return objUser;
         }
 
-        public async Task<IEnumerable<Users>> GetUsers()
+        public async Task<PagedList<Users>> GetUsers(UserParams userParams)
         {
             Photo objPhoto = new Photo();
             IEnumerable<Users> lstUsers = await _users.Find(user => true).ToListAsync();
+
+            lstUsers = lstUsers.Where(u => u.ID != userParams.UserId);
+            lstUsers = lstUsers.Where(u => u.Gender == userParams.Gender);
+            lstUsers = lstUsers.OrderByDescending(u => u.LastActive);
+
+            if (userParams.MinAge != 18 || userParams.MaxAge != 99)
+            {
+                var minDOB = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+                var maxDOB = DateTime.Today.AddYears(-userParams.MinAge);
+
+                lstUsers = lstUsers.Where(u => u.DateOfBirth >= minDOB && u.DateOfBirth <= maxDOB);
+            }
+
+            if (!string.IsNullOrEmpty(userParams.OrderBy))
+            {
+                switch (userParams.OrderBy)
+                {
+                    case "created":
+                        lstUsers = lstUsers.OrderByDescending(u => u.Created);
+                        break;
+                    default:
+                        lstUsers = lstUsers.OrderByDescending(u => u.LastActive);
+                        break;
+                }
+            }
 
             foreach (var item in lstUsers)
             {
@@ -105,7 +131,7 @@ namespace HabFitAPI.Data
                 }
             }
 
-            return lstUsers;
+            return PagedList<Users>.Create(lstUsers.AsQueryable(), userParams.PageNumber, userParams.PageSize);
         }
 
         //public async Task<ReplaceOneResult> SaveUserAsync(Users entity) where T : class
@@ -129,7 +155,7 @@ namespace HabFitAPI.Data
             {
                 throw ex;
             }
-            
+
             return result;
         }
     }

@@ -6,8 +6,12 @@
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css';
 @import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
 
-.mt-50 {
+.mt-100 {
     margin-top: 100px;
+}
+
+.mt-50{
+  margin-top: 50px;
 }
 
 .tab-panel {

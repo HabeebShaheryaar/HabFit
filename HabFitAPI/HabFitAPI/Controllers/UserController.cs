@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HabFit.Common.Helpers;
 
 namespace HabFitAPI.Controllers
 {
@@ -31,10 +32,20 @@ namespace HabFitAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userparams)
         {
-            var users = await _repo.GetUsers();
+            var currentUserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userFromRepo = await _repo.GetUser(currentUserID);
+            userparams.UserId = currentUserID;
+
+            if (string.IsNullOrEmpty(userparams.Gender))
+            {
+                userparams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+
+            var users = await _repo.GetUsers(userparams);
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDTO>>(users);
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(usersToReturn);
         }
 
