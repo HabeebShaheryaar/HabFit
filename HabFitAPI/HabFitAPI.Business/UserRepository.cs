@@ -18,34 +18,15 @@ namespace HabFitAPI.Business
             _userData = habfitData;
         }
 
-        public void AddPhoto(Photo photo)
-        {
-            _userData.AddPhoto(photo);
-        }
-
+        //Users
         public void AddUser(Users user)
         {
             _userData.AddUser(user);
         }
 
-        public void DeletePhoto(string photoID)
-        {
-            _userData.DeletePhoto(photoID);
-        }
-
         public void DeleteUser(string userID)
         {
             _userData.DeleteUser(userID);
-        }
-
-        public Photo GetMainPhotoForUser(string userID)
-        {
-            return _userData.GetMainPhotoForUser(userID);
-        }
-
-        public Task<Photo> GetPhoto(string userID)
-        {
-            return _userData.GetPhoto(userID);
         }
 
         public Task<Users> GetUser(string userID)
@@ -63,9 +44,43 @@ namespace HabFitAPI.Business
             return _userData.SaveAll(id, user);
         }
 
+        //Photos
+
         public void SetMainPhoto(Photo photoFromRepo, Photo currentMainPhoto)
         {
             _userData.SetMainPhoto(photoFromRepo, currentMainPhoto);
+        }
+
+        public Photo GetMainPhotoForUser(string userID)
+        {
+            return _userData.GetMainPhotoForUser(userID);
+        }
+
+        public Task<Photo> GetPhoto(string userID)
+        {
+            return _userData.GetPhoto(userID);
+        }
+
+        public void AddPhoto(Photo photo)
+        {
+            _userData.AddPhoto(photo);
+        }
+
+        public void DeletePhoto(string photoID)
+        {
+            _userData.DeletePhoto(photoID);
+        }
+
+        //Likes
+
+        public Task<Like> GetLike(string userID, string recipientID)
+        {
+            return _userData.GetLike(userID, recipientID);
+        }
+
+        public void LikeUser(Like like)
+        {
+            _userData.LikeUser(like);
         }
     }
 }

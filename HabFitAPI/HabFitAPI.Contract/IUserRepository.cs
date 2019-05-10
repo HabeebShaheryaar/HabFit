@@ -19,5 +19,9 @@ namespace HabFitAPI.Contract
         Task<Photo> GetPhoto(string userID);
         Photo GetMainPhotoForUser(string userID);
         void SetMainPhoto(Photo photoFromRepo, Photo currentMainPhoto);
+
+        Task<Like> GetLike(string userID, string recipientID);
+
+        void LikeUser(Like like);
     }
 }

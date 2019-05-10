@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
-import {TimeAgoPipe} from 'time-ago-pipe';
+import { TimeAgoPipe } from 'time-ago-pipe';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -29,6 +29,8 @@ import { UserEditComponent } from './members/user-edit/user-edit.component';
 import { UserEditResolver } from './_resolvers/user-edit.resolver.';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { FanismComponent } from './fanism/fanism.component';
+import { FanismResolver } from './_resolvers/fanism.resolver';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -46,7 +48,8 @@ export function tokenGetter() {
       UserDetailComponent,
       UserEditComponent,
       PhotoEditorComponent,
-      TimeAgoPipe
+      TimeAgoPipe,
+      FanismComponent
    ],
    imports: [
       BrowserModule,
@@ -78,7 +81,8 @@ export function tokenGetter() {
       UserDetailResolver,
       UserListResolver,
       UserEditResolver,
-      PreventUnsavedChanges
+      PreventUnsavedChanges,
+      FanismResolver
    ],
    bootstrap: [
       AppComponent

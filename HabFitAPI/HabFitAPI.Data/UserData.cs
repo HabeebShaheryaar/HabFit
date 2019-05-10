@@ -16,6 +16,7 @@ namespace HabFitAPI.Data
     {
         private readonly IMongoCollection<Users> _users;
         private readonly IMongoCollection<Photo> _photos;
+        private readonly IMongoCollection<Like> _likes;
 
         IConfiguration config { get; }
 
@@ -25,6 +26,7 @@ namespace HabFitAPI.Data
             var database = client.GetDatabase("HabFitDB");
             _users = database.GetCollection<Users>("Users");
             _photos = database.GetCollection<Photo>("Photos");
+            _likes = database.GetCollection<Like>("Likes");
         }
 
         public void AddUser(Users user)
@@ -100,6 +102,60 @@ namespace HabFitAPI.Data
             lstUsers = lstUsers.Where(u => u.Gender == userParams.Gender);
             lstUsers = lstUsers.OrderByDescending(u => u.LastActive);
 
+            if (userParams.Likers)
+            {
+                List<Like> userLikers = this.GetUserLikes(userParams.UserId, userParams.Likers);
+
+                List<Users> tempUsersList = new List<Users>();
+                List<Users> tempUsersList2 = null;
+                tempUsersList = lstUsers.ToList();
+
+                List<Users> NewTempUsersList = new List<Users>();
+
+                for (int i = 0; i < userLikers.Count; i++)
+                {
+                    if (tempUsersList.Exists(u => u.ID == userLikers[i].LikerID))
+                    {
+                        tempUsersList2 = new List<Users>();
+                        tempUsersList2 = tempUsersList.Where(u => u.ID == userLikers[i].LikerID).ToList();
+
+                        foreach (var tempUser in tempUsersList2)
+                        {
+                            NewTempUsersList.Add(tempUser);
+                        }
+                    }
+                }
+
+                lstUsers = NewTempUsersList.AsEnumerable();
+            }
+
+            if (userParams.Likees)
+            {
+                List<Like> userLikers = this.GetUserLikes(userParams.UserId, userParams.Likers);
+
+                List<Users> tempUsersList = new List<Users>();
+                List<Users> tempUsersList2 = null;
+                tempUsersList = lstUsers.ToList();
+
+                List<Users> NewTempUsersList = new List<Users>();
+
+                for (int i = 0; i < userLikers.Count; i++)
+                {
+                    if (tempUsersList.Exists(u => u.ID == userLikers[i].LikeeID))
+                    {
+                        tempUsersList2 = new List<Users>();
+                        tempUsersList2 = tempUsersList.Where(u => u.ID == userLikers[i].LikeeID).ToList();
+
+                        foreach (var tempUser in tempUsersList2)
+                        {
+                            NewTempUsersList.Add(tempUser);
+                        }
+                    }
+                }
+
+                lstUsers = NewTempUsersList.AsEnumerable();
+            }
+
             if (userParams.MinAge != 18 || userParams.MaxAge != 99)
             {
                 var minDOB = DateTime.Today.AddYears(-userParams.MaxAge - 1);
@@ -157,6 +213,33 @@ namespace HabFitAPI.Data
             }
 
             return result;
+        }
+
+        //Likes
+        public async Task<Like> GetLike(string userID, string recipientID)
+        {
+            return await _likes.Find<Like>(l => l.LikerID == userID && l.LikeeID == recipientID).FirstOrDefaultAsync();
+        }
+
+        public void LikeUser(Like like)
+        {
+            _likes.InsertOneAsync(like);
+        }
+
+        private List<Like> GetUserLikes(string userID, bool likers)
+        {
+            if (likers) //get the list if users who liked the currently logged in User
+            {
+                //this list object contains the list of users which currently logged In User has liked
+                List<Like> lstLikers = _likes.Find(u => u.LikeeID == userID).ToList();
+                return lstLikers;
+            }
+            else
+            {
+                //this list object contains the list of users which have liked the currently logged In User
+                List<Like> lstLikees = _likes.Find(u => u.LikerID == userID).ToList();
+                return lstLikees;
+            }
         }
     }
 }
