@@ -31,6 +31,9 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FanismComponent } from './fanism/fanism.component';
 import { FanismResolver } from './_resolvers/fanism.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { UserMessagesComponent } from './members/user-messages/user-messages.component';
+import { from } from 'rxjs';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -47,6 +50,7 @@ export function tokenGetter() {
       UserCardComponent,
       UserDetailComponent,
       UserEditComponent,
+      UserMessagesComponent,
       PhotoEditorComponent,
       TimeAgoPipe,
       FanismComponent
@@ -82,7 +86,8 @@ export function tokenGetter() {
       UserListResolver,
       UserEditResolver,
       PreventUnsavedChanges,
-      FanismResolver
+      FanismResolver,
+      MessagesResolver
    ],
    bootstrap: [
       AppComponent

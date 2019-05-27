@@ -33,5 +33,8 @@ namespace HabFitAPI.Entities
 
         public List<Like> Likers { get; set; }
         public List<Like> Likees { get; set; }
+
+        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; }
     }
 }

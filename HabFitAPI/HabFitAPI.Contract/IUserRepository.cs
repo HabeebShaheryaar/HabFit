@@ -1,4 +1,5 @@
-﻿using HabFitAPI.Entities;
+﻿using HabFit.Common.Helpers;
+using HabFitAPI.Entities;
 using HabFitAPI.Helpers;
 using System;
 using System.Collections.Generic;
@@ -23,5 +24,14 @@ namespace HabFitAPI.Contract
         Task<Like> GetLike(string userID, string recipientID);
 
         void LikeUser(Like like);
+
+        Task<Message> GetMessage(string ID);
+        Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams);
+        Task<IEnumerable<Message>> GetMessagesThread(string userID, string recipientID);
+        void CreateMessage(Message message);
+
+        string DeleteMessage(string ID);
+
+        Task<bool> SaveAll(string id, Message message);
     }
 }

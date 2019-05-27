@@ -9,6 +9,7 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using HabFitAPI.Helpers;
+using HabFit.Common.Helpers;
 
 namespace HabFitAPI.Data
 {
@@ -17,6 +18,7 @@ namespace HabFitAPI.Data
         private readonly IMongoCollection<Users> _users;
         private readonly IMongoCollection<Photo> _photos;
         private readonly IMongoCollection<Like> _likes;
+        private readonly IMongoCollection<Message> _messages;
 
         IConfiguration config { get; }
 
@@ -27,6 +29,7 @@ namespace HabFitAPI.Data
             _users = database.GetCollection<Users>("Users");
             _photos = database.GetCollection<Photo>("Photos");
             _likes = database.GetCollection<Like>("Likes");
+            _messages = database.GetCollection<Message>("Messages");
         }
 
         public void AddUser(Users user)
@@ -240,6 +243,122 @@ namespace HabFitAPI.Data
                 List<Like> lstLikees = _likes.Find(u => u.LikerID == userID).ToList();
                 return lstLikees;
             }
+        }
+
+        //Messages
+        public async Task<Message> GetMessage(string ID)
+        {
+            return await _messages.Find<Message>(m => m.ID == ID).FirstOrDefaultAsync();
+        }
+
+        public void CreateMessage(Message message)
+        {
+            _messages.InsertOneAsync(message);
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
+        {
+            //if we would have used Entity Framework the couuld have been like below
+            //var messages = _messages
+            //    .Include(u => u.Sender).ThenInclude(p => p.Photos)
+            //    .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+            //    .AsQueryable();
+
+            //but as we aren't using it, the code became so big. How we can optimize it???
+
+            #region Code to optimize
+
+            var messages = await _messages.Find(m => true).ToListAsync();
+
+            foreach (var item in messages)
+            {
+                var senderID = item.SenderID;
+                var recipientID = item.RecipientID;
+
+                item.Sender = new Users();
+                item.Sender = await this.GetUser(senderID);
+
+                item.Recipient = new Users();
+                item.Recipient = await this.GetUser(recipientID);
+            }
+
+            #endregion
+
+            switch (messageParams.MessageContainer)
+            {
+                case "Inbox":
+                    messages = messages.Where(u => u.RecipientID == messageParams.UserId && u.RecipientDeleted == false).ToList();
+                    break;
+
+                case "Outbox":
+                    messages = messages.Where(u => u.SenderID == messageParams.UserId && u.SenderDeleted == false).ToList();
+                    break;
+
+                default:
+                    messages = messages.Where(u => u.RecipientID == messageParams.UserId && u.RecipientDeleted == false && u.IsRead == false).ToList();
+                    break;
+            }
+
+            messages = messages.OrderByDescending(d => d.MessageSent).ToList();
+            return PagedList<Message>.Create(messages.AsQueryable(), messageParams.PageNumber, messageParams.PageSize);
+        }
+
+        public async Task<IEnumerable<Message>> GetMessagesThread(string userID, string recipientID)
+        {
+            #region Code to optimize
+
+            var messages = await _messages.Find(m => true).ToListAsync();
+
+            messages = messages.Where(m => m.RecipientID == userID && m.RecipientDeleted == false && m.SenderID == recipientID
+                                    || m.RecipientID == recipientID && m.SenderID == userID && m.SenderDeleted == false)
+                               .OrderByDescending(m => m.MessageSent)
+                               .ToList();
+
+            foreach (var item in messages)
+            {
+                var senderID = item.SenderID;
+                var _recipientID = item.RecipientID;
+
+                item.Sender = new Users();
+                item.Sender = await this.GetUser(senderID);
+
+                item.Recipient = new Users();
+                item.Recipient = await this.GetUser(_recipientID);
+            }
+            #endregion
+
+            return messages.AsEnumerable<Message>();
+        }
+
+        public string DeleteMessage(string ID)
+        {
+            string response = string.Empty;
+            DeleteResult result = _messages.DeleteOne(mes => mes.ID == ID);
+
+            if (result.DeletedCount == 1)
+                response = "Deleted successfully";
+            else
+                response = "Error in deleting message";
+
+            return response;
+        }
+
+        public async Task<bool> SaveAll(string id, Message message)
+        {
+            bool result = false;
+
+            try
+            {
+                var response = await _messages.ReplaceOneAsync(doc => doc.ID == id, message, new UpdateOptions { IsUpsert = true });
+                if (response.MatchedCount == 1 && response.ModifiedCount == 1)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
         }
     }
 }

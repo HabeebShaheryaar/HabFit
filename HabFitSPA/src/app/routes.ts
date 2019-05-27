@@ -11,6 +11,7 @@ import { UserEditResolver } from './_resolvers/user-edit.resolver.';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { FanismComponent } from './fanism/fanism.component';
 import { FanismResolver } from './_resolvers/fanism.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
 
 export const appRoutes: Routes = [
     { path: '', component: HomeComponent},
@@ -23,7 +24,7 @@ export const appRoutes: Routes = [
             { path: 'users', component: UsersComponent, resolve: {users: UserListResolver}},
             { path: 'users/:id', component: UserDetailComponent, resolve: {user: UserDetailResolver}},
             { path: 'user/edit', component: UserEditComponent, resolve: {user: UserEditResolver}, canDeactivate: [PreventUnsavedChanges]},
-            { path: 'messages', component: MessagesComponent },
+            { path: 'messages', component: MessagesComponent, resolve: {messages: MessagesResolver} },
             { path: 'fanism', component: FanismComponent, resolve: {users: FanismResolver}},
         ]
     },

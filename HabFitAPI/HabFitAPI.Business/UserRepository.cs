@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using HabFit.Common.Helpers;
 using HabFitAPI.Contract;
 using HabFitAPI.Data;
 using HabFitAPI.Entities;
@@ -81,6 +82,37 @@ namespace HabFitAPI.Business
         public void LikeUser(Like like)
         {
             _userData.LikeUser(like);
+        }
+
+        //Messages
+        public Task<Message> GetMessage(string ID)
+        {
+            return _userData.GetMessage(ID);
+        }
+
+        public Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
+        {
+            return _userData.GetMessagesForUser(messageParams);
+        }
+
+        public async Task<IEnumerable<Message>> GetMessagesThread(string userID, string recipientID)
+        {
+            return await _userData.GetMessagesThread(userID, recipientID);
+        }
+
+        public void CreateMessage(Message message)
+        {
+            _userData.CreateMessage(message);
+        }
+
+        public string DeleteMessage(string ID)
+        {
+            return _userData.DeleteMessage(ID);
+        }
+
+        public Task<bool> SaveAll(string id, Message message)
+        {
+            return _userData.SaveAll(id, message);
         }
     }
 }
